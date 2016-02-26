@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yy.mapper.EmployeeMapper" >
+  <!-- <resultMap id="EmployeeMap" type="com.yy.model.Employee" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="age" property="age" jdbcType="INTEGER" />
+  </resultMap> -->
+  <!-- <sql id="Base_Column_List" >
+    id, user_name, password, age
+  </sql> -->
+  <select id="getEmployeeById" resultType="com.yy.model.Employee" parameterType="java.lang.Integer" >
+    select * from employee where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteEmployeeById" parameterType="java.lang.Integer" >
+    delete from employee
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="add" parameterType="com.yy.model.Employee" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO employee(name,email,address,phoneNumber,remark,status,joinTime)
+    values (#{name}, #{email}, #{address},#{phoneNumber},#{remark},#{status},#{joinTime})
+  </insert>
+  
+  <update id="update" parameterType="com.yy.model.Employee" >
+    update employee
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ <!--  <update id="updateByPrimaryKey" parameterType="com.yy.model.Employee" >
+    update user_t
+    set user_name = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      age = #{age,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update> -->
+  
+  <select id="getEmployees" resultType="com.yy.model.Employee" >
+    select * from employee order by joinTime desc limit #{offset},#{limit}
+  </select>
+  
+  <select id="getLastId" resultType="java.lang.Integer" >
+    select LAST_INSERT_ID() as id; 
+  </select>
+</mapper>
